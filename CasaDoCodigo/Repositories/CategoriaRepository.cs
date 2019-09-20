@@ -1,5 +1,5 @@
 ﻿using CasaDoCodigo.Models;
-using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +9,7 @@ namespace CasaDoCodigo.Repositories
     {
         Task SalvarCategoria(string nome);
         Categoria BuscarCategoria(string nome);
+        List<Categoria> BuscarTodasCategorias();
     }
 
     public class CategoriaRepository : BaseRepository<Categoria>, ICategoriaRepository
@@ -34,6 +35,11 @@ namespace CasaDoCodigo.Repositories
         public Categoria BuscarCategoria(string nome)
         {   
             return dbSet.Where(c => c.Nome == nome).SingleOrDefault();
+        }
+
+        public List<Categoria> BuscarTodasCategorias()
+        {
+            return dbSet.ToList();            
         }
     }
 }
