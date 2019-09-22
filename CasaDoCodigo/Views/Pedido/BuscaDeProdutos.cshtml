@@ -3,19 +3,6 @@
 @{
     var categorias = Model.Produtos.OrderBy(c => c.Categoria.Id)
         .Select(c => new { c.Categoria.Id, c.Categoria.Nome }).ToList().Distinct();
-
-    var testeNomeCategoria = string.Empty;
-    int testeCodigoCategoria = -1;
-
-    foreach (var produto in Model.Produtos)
-    {
-        if (!string.IsNullOrEmpty(produto.Categoria.Nome))
-        {
-            testeNomeCategoria = produto.Categoria.Nome;
-            testeCodigoCategoria = produto.Categoria.Id;
-            break;
-        }
-    }
 }
 
 <form asp-action="BuscaDeProdutos" method="post">
@@ -33,6 +20,7 @@
                             </button>
                         </span>
                     </div>
+                    <span asp-validation-for="@Model.Pesquisa"></span>
                 </div>
             </div>
         </div>

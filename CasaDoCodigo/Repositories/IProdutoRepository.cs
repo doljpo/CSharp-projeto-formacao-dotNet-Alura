@@ -8,6 +8,6 @@ namespace CasaDoCodigo.Repositories
     {
         Task SaveProdutos(List<Livro> livros);
         Task<IList<Produto>> GetProdutos();
-        Task<IList<Produto>> GetProdutos(string nomeProduto);
+        Task<IList<Produto>> GetProdutos(string termoPesquisa);
     }
 }

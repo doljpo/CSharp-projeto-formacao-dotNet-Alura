@@ -21,16 +21,17 @@ namespace CasaDoCodigo.Repositories
             return await dbSet.Include(p => p.Categoria).ToListAsync();
         }
 
-        public async Task<IList<Produto>> GetProdutos(string nomeProduto)
+        public async Task<IList<Produto>> GetProdutos(string termoPesquisa)
         {
-            if (string.IsNullOrEmpty(nomeProduto))
+            if (string.IsNullOrEmpty(termoPesquisa))
             {
                 return await GetProdutos();
             }
             else
             {
                 return await dbSet.Include(p => p.Categoria)
-                    .Where(p => p.Nome.ToUpper().Contains(nomeProduto.ToUpper())).ToListAsync();
+                    .Where(p => p.Nome.ToUpper().Contains(termoPesquisa.ToUpper()) 
+                    || p.Categoria.Nome.ToUpper().Contains(termoPesquisa.ToUpper())).ToListAsync();
             }
         }
 

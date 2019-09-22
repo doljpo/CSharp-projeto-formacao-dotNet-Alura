@@ -1,4 +1,5 @@
 ﻿using CasaDoCodigo.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ namespace CasaDoCodigo.Repositories
     {
         Task SalvarCategoria(string nome);
         Categoria BuscarCategoria(string nome);
-        List<Categoria> BuscarTodasCategorias();
+        Task<List<Categoria>> BuscarTodasCategorias();
     }
 
     public class CategoriaRepository : BaseRepository<Categoria>, ICategoriaRepository
@@ -37,9 +38,9 @@ namespace CasaDoCodigo.Repositories
             return dbSet.Where(c => c.Nome == nome).SingleOrDefault();
         }
 
-        public List<Categoria> BuscarTodasCategorias()
+        public async Task<List<Categoria>> BuscarTodasCategorias()
         {
-            return dbSet.ToList();            
+            return await dbSet.ToListAsync();
         }
     }
 }

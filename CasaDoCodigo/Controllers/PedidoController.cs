@@ -2,6 +2,7 @@
 using CasaDoCodigo.Models.ViewModels;
 using CasaDoCodigo.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -27,6 +28,11 @@ namespace CasaDoCodigo.Controllers
             var produtos = string.IsNullOrWhiteSpace(Pesquisa) ?
                 await produtoRepository.GetProdutos() :
                 await produtoRepository.GetProdutos(Pesquisa);
+
+            if (!string.IsNullOrWhiteSpace(Pesquisa) && produtos.Count <= 0)
+            {
+                ModelState.AddModelError("Pesquisa", "Nenhum produto encontrado");
+            }
 
             BuscaDeProdutosViewModel buscaDeProdutosViewModel =
                 new BuscaDeProdutosViewModel(produtos);
