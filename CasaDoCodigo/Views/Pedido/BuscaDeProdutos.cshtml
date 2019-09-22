@@ -1,12 +1,13 @@
-﻿@model IList<Produto>
+﻿@model BuscaDeProdutosViewModel
 
 @{
-    var categorias = Model.OrderBy(c => c.Categoria.Id).Select(c => new { c.Categoria.Id, c.Categoria.Nome }).ToList().Distinct();
+    var categorias = Model.Produtos.OrderBy(c => c.Categoria.Id)
+        .Select(c => new { c.Categoria.Id, c.Categoria.Nome }).ToList().Distinct();
 
     var testeNomeCategoria = string.Empty;
     int testeCodigoCategoria = -1;
 
-    foreach (var produto in Model)
+    foreach (var produto in Model.Produtos)
     {
         if (!string.IsNullOrEmpty(produto.Categoria.Nome))
         {
@@ -17,23 +18,26 @@
     }
 }
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-4">
-            <h2>Buscar produtos</h2>
-            <div id="custom-search-input">
-                <div class="input-group col-md-12">
-                    <input type="text" name="pesquisa" class="form-control input-lg" placeholder="categoria ou produto" id="Pesquisa" value="" />
-                    <span class="input-group-btn">
-                        <button class="btn btn-info btn-lg" type="submit">
-                            <i class="glyphicon glyphicon-search"></i>
-                        </button>
-                    </span>
+<form asp-action="BuscaDeProdutos" method="post">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4">
+                <h2>Buscar produtos</h2>
+                <div id="custom-search-input">
+                    <div class="input-group col-md-12">
+                        <input type="text" class="form-control input-lg" id="Pesquisa"
+                               placeholder="categoria ou produto" asp-for="@Model.Pesquisa" />
+                        <span class="input-group-btn">
+                            <button class="btn btn-info btn-lg" type="submit">
+                                <i class="glyphicon glyphicon-search"></i>
+                            </button>
+                        </span>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</form>
 
 @foreach (var categoria in categorias)
 {
@@ -43,7 +47,8 @@
             @{
                 const int TAMANHO_PAGINA = 4;
 
-                int paginasComMesmaCategoria = (int)Math.Ceiling((double)Model.Where(p => p.Categoria.Id == categoria.Id).Count() / TAMANHO_PAGINA);
+                int paginasComMesmaCategoria = (int)Math.Ceiling((double)Model.Produtos
+                    .Where(p => p.Categoria.Id == categoria.Id).Count() / TAMANHO_PAGINA);
             }
             @for (int pagina = 0; pagina < paginasComMesmaCategoria; pagina++)
             {
@@ -51,7 +56,8 @@
                     <div class="row">
 
                         @{
-                            var produtosDaPagina = Model.Where(p => p.Categoria.Id == categoria.Id).Skip(pagina * TAMANHO_PAGINA).Take(TAMANHO_PAGINA);
+                            var produtosDaPagina = Model.Produtos.Where(p => p.Categoria.Id == categoria.Id)
+                                .Skip(pagina * TAMANHO_PAGINA).Take(TAMANHO_PAGINA);
                         }
                         @foreach (var produto in produtosDaPagina)
                         {
@@ -59,7 +65,8 @@
                             <div class="col-md-3 col-sm-3 col-lg-3">
                                 <div class="panel panel-default">
                                     <div class="panel-body">
-                                        <img class="img-produto-carrossel" src="/images/produtos/large_@(produto.Codigo).jpg" />
+                                        <img class="img-produto-carrossel"
+                                             src="/images/produtos/large_@(produto.Codigo).jpg" />
                                     </div>
                                     <div class="panel-footer produto-footer">
                                         <div class="produto-nome">@produto.Nome</div>

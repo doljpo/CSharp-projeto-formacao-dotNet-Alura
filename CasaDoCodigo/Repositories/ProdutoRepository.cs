@@ -16,9 +16,22 @@ namespace CasaDoCodigo.Repositories
             this.categoriaRepository = categoriaRepository;
         }
 
-        public IList<Produto> GetProdutos()
+        public async Task<IList<Produto>> GetProdutos()
         {
-            return dbSet.Include(p => p.Categoria).ToList();
+            return await dbSet.Include(p => p.Categoria).ToListAsync();
+        }
+
+        public async Task<IList<Produto>> GetProdutos(string nomeProduto)
+        {
+            if (string.IsNullOrEmpty(nomeProduto))
+            {
+                return await GetProdutos();
+            }
+            else
+            {
+                return await dbSet.Include(p => p.Categoria)
+                    .Where(p => p.Nome.ToUpper().Contains(nomeProduto.ToUpper())).ToListAsync();
+            }
         }
 
         public async Task SaveProdutos(List<Livro> livros)
